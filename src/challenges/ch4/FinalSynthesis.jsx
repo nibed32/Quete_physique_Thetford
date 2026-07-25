@@ -143,7 +143,6 @@ function FinalSynthesis({ onComplete }) {
             <button className="btn-primary" onClick={checkStep2}>Vérifier</button>
             {f2 && !f2.ok && <p className="feedback-bad">{f2.reveal ? 'Essais épuisés — passons à la suite.' : 'Pas encore correct.'}</p>}
             {f2?.ok && <p className="feedback-good">Exact !</p>}
-            <p className="hint">t = 2Vy / g</p>
           </>
         )}
         {step === 3 && (
@@ -158,7 +157,6 @@ function FinalSynthesis({ onComplete }) {
             <button className="btn-primary" onClick={checkStep3}>Vérifier</button>
             {f3 && !f3.ok && <p className="feedback-bad">{f3.reveal ? 'Essais épuisés — voici la réponse.' : 'Pas encore correct.'}</p>}
             {f3?.ok && <p className="feedback-good">Exact !</p>}
-            <p className="hint">vf = m1·Vx / (m1 + m2)</p>
           </>
         )}
       </div>

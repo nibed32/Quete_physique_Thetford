@@ -109,7 +109,6 @@ function CrossProductDirection({ onComplete }) {
         </div>
         {feedback === 'ok' && <p className="feedback-good">Correct !</p>}
         {feedback === 'bad' && <p className="feedback-bad">Pas cette fois.</p>}
-        {needsMagnitude && <p className="hint">|A × B| = |A||B|sin(θ)</p>}
         <p className="hint">Score actuel : {correctCount} / {round}</p>
       </div>
     </div>

@@ -130,7 +130,6 @@ function VectorDecomposition({ onComplete }) {
               <p className="feedback-bad">{feedback1.reveal ? 'Essais épuisés — passons à la suite.' : 'Pas encore correct, réessaie.'}</p>
             )}
             {feedback1?.ok && <p className="feedback-good">Exact !</p>}
-            <p className="hint">Astuce: Vx = V·cos(θ), Vy = V·sin(θ)</p>
           </>
         ) : (
           <>
@@ -150,7 +149,6 @@ function VectorDecomposition({ onComplete }) {
               <p className="feedback-bad">{feedback2.reveal ? 'Essais épuisés — voici la réponse.' : 'Pas encore correct, réessaie.'}</p>
             )}
             {feedback2?.ok && <p className="feedback-good">Exact !</p>}
-            <p className="hint">Astuce: |W| = √(Wx² + Wy²), θ = atan2(Wy, Wx)</p>
           </>
         )}
       </div>

@@ -125,7 +125,6 @@ function NewtonRocket({ onComplete }) {
             <p className="feedback-bad">{vFeedback.reveal ? 'Essais épuisés — voici la réponse.' : 'Pas encore correct.'}</p>
           )}
           {vFeedback?.ok && <p className="feedback-good">Exact !</p>}
-          <p className="hint">v = a·t</p>
         </div>
       </div>
     )
@@ -155,7 +154,6 @@ function NewtonRocket({ onComplete }) {
         {feedback && !feedback.ok && !feedback.tooWeak && (
           <p className="feedback-bad">Temps obtenu: {feedback.t} s. Essais restants: {Math.max(0, 3 - attempts)}</p>
         )}
-        <p className="hint">a = (F − f) / m &nbsp; | &nbsp; d = ½at²</p>
       </div>
     </div>
   )

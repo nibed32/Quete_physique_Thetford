@@ -156,7 +156,6 @@ function VectorAddition({ onComplete }) {
               <p className="feedback-bad">{feedback.reveal ? 'Essais épuisés — voici la réponse.' : 'Pas encore correct, réessaie.'}</p>
             )}
             {feedback?.ok && <p className="feedback-good">Exact !</p>}
-            <p className="hint">Rx = Ax + Bx, Ry = Ay + By, puis |R| et θ = atan2(Ry, Rx)</p>
           </>
         )}
       </div>

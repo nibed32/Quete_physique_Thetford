@@ -144,7 +144,6 @@ function ForceDiagram({ onComplete }) {
               <p className="feedback-bad">{accelFeedback.reveal ? 'Essais épuisés — voici la réponse.' : 'Pas encore correct.'}</p>
             )}
             {accelFeedback?.ok && <p className="feedback-good">Exact !</p>}
-            <p className="hint">a = (F − μk·m·g) / m</p>
           </>
         )}
       </div>

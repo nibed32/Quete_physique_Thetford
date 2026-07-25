@@ -147,7 +147,6 @@ function MomentumExplosion({ onComplete }) {
             <p className="feedback-bad">{keFeedback.reveal ? 'Essais épuisés — voici la réponse.' : 'Pas encore correct.'}</p>
           )}
           {keFeedback?.ok && <p className="feedback-good">Exact !</p>}
-          <p className="hint">KE = ½m1v1² + ½m2v2²</p>
         </div>
       </div>
     )
@@ -169,7 +168,6 @@ function MomentumExplosion({ onComplete }) {
           <p className="feedback-bad">{feedback.reveal ? 'Essais épuisés — passons à la suite.' : 'Pas encore correct, réessaie.'}</p>
         )}
         {feedback?.ok && <p className="feedback-good">Exact !</p>}
-        <p className="hint">m1v1 + m2v2 = 0</p>
       </div>
     </div>
   )

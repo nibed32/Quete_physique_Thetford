@@ -107,7 +107,6 @@ function MruaPrediction({ onComplete }) {
               <p className="feedback-bad">{feedback1.reveal ? 'Essais épuisés — passons à la suite.' : 'Pas encore correct, réessaie.'}</p>
             )}
             {feedback1?.ok && <p className="feedback-good">Exact !</p>}
-            <p className="hint">v = v₀ + a₁t₁</p>
           </>
         ) : (
           <>
@@ -122,7 +121,6 @@ function MruaPrediction({ onComplete }) {
               <p className="feedback-bad">{feedback2.reveal ? 'Essais épuisés — voici la réponse.' : 'Pas encore correct, réessaie.'}</p>
             )}
             {feedback2?.ok && <p className="feedback-good">Exact !</p>}
-            <p className="hint">x₁ = v₀t₁ + ½a₁t₁² &nbsp;|&nbsp; x_total = x₁ + v₁t₂ + ½a₂t₂²</p>
           </>
         )}
       </div>

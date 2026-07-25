@@ -160,7 +160,6 @@ function ProjectileTarget({ onComplete }) {
             <p className="feedback-bad">{analysisFeedback.reveal ? 'Essais épuisés — voici la réponse.' : 'Pas encore correct, réessaie.'}</p>
           )}
           {analysisFeedback?.ok && <p className="feedback-good">Exact !</p>}
-          <p className="hint">t = 2v·sin(θ)/g &nbsp; | &nbsp; h_max = (v·sin(θ))² / (2g)</p>
         </div>
       </div>
     )

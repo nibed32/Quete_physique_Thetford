@@ -157,7 +157,6 @@ function ElasticCollision({ onComplete }) {
             <p className="feedback-bad">{v1pFeedback.reveal ? 'Essais épuisés — voici la réponse.' : 'Pas encore correct.'}</p>
           )}
           {v1pFeedback?.ok && <p className="feedback-good">Exact !</p>}
-          <p className="hint">v1' = (m1 − m2)v1 / (m1 + m2)</p>
         </div>
       </div>
     )
@@ -177,7 +176,6 @@ function ElasticCollision({ onComplete }) {
         <button className="btn-primary" onClick={launch} disabled={running}>Lancer</button>
         {feedback && !feedback.ok && <p className="feedback-bad">v2' obtenue: {feedback.v2p} m/s. Essais restants: {Math.max(0, 3 - attempts)}</p>}
         {feedback?.ok && <p className="feedback-good">Précis !</p>}
-        <p className="hint">v2' = 2m1v1 / (m1+m2)</p>
       </div>
     </div>
   )

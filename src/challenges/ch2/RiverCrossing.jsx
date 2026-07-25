@@ -161,7 +161,6 @@ function RiverCrossing({ onComplete }) {
               <p className="feedback-bad">{predFeedback.reveal ? 'Essais épuisés — passons à la suite.' : 'Pas encore correct, réessaie.'}</p>
             )}
             {predFeedback?.ok && <p className="feedback-good">Exact !</p>}
-            <p className="hint">t = largeur / (v_kayak·cos θ) &nbsp;|&nbsp; dérive = (v_courant − v_kayak·sin θ) · t</p>
           </>
         ) : (
           <>

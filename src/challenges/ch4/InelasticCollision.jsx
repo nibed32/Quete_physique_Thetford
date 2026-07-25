@@ -166,7 +166,6 @@ function InelasticCollision({ onComplete }) {
             <p className="feedback-bad">{keFeedback.reveal ? 'Essais épuisés — voici la réponse.' : 'Pas encore correct.'}</p>
           )}
           {keFeedback?.ok && <p className="feedback-good">Exact !</p>}
-          <p className="hint">ΔKE = ½m1v1² − ½(m1+m2)vf²</p>
         </div>
       </div>
     )
@@ -187,7 +186,6 @@ function InelasticCollision({ onComplete }) {
           <p className="feedback-bad">{feedback.reveal ? 'Essais épuisés — passons à la suite.' : 'Pas encore correct, réessaie.'}</p>
         )}
         {feedback?.ok && <p className="feedback-good">Exact !</p>}
-        <p className="hint">vf = m1v1 / (m1 + m2)</p>
       </div>
     </div>
   )

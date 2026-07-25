@@ -121,7 +121,6 @@ function InclineCriticalAngle({ onComplete }) {
               <p className="feedback-bad">{feedback.reveal ? 'Essais épuisés — passons à la suite.' : 'Pas encore correct.'}</p>
             )}
             {feedback?.ok && <p className="feedback-good">Exact !</p>}
-            <p className="hint">θc = arctan(μs)</p>
           </>
         ) : (
           <>
@@ -137,7 +136,6 @@ function InclineCriticalAngle({ onComplete }) {
               <p className="feedback-bad">{accelFeedback.reveal ? 'Essais épuisés — voici la réponse.' : 'Pas encore correct.'}</p>
             )}
             {accelFeedback?.ok && <p className="feedback-good">Exact !</p>}
-            <p className="hint">a = g(sin θ − μk cos θ)</p>
           </>
         )}
       </div>
