@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { degToRad, g, radToDeg, randRange, round } from '../../utils/physics'
+import { degToRad, g, radToDeg, randInt, randRange, round } from '../../utils/physics'
 
 const TRACK_LEN = 220
 
@@ -13,7 +13,15 @@ function InclineCriticalAngle({ onComplete }) {
   const [feedback, setFeedback] = useState(null)
   const rafRef = useRef(null)
 
+  const [step, setStep] = useState(1)
+  const [accelInput, setAccelInput] = useState('')
+  const [accelAttempts, setAccelAttempts] = useState(0)
+  const [accelFeedback, setAccelFeedback] = useState(null)
+
   const criticalAngle = radToDeg(Math.atan(muS))
+  const [steepAngleFinal] = useState(() => round(criticalAngle + randInt(12, 20)))
+  const radSteep = degToRad(steepAngleFinal)
+  const correctAccel = g * (Math.sin(radSteep) - muS * Math.cos(radSteep))
 
   useEffect(() => () => cancelAnimationFrame(rafRef.current), [])
 
@@ -28,14 +36,14 @@ function InclineCriticalAngle({ onComplete }) {
     }
     setTestResult('sliding')
     const start = performance.now()
-    const step = (now) => {
+    const stepFn = (now) => {
       const t = (now - start) / 1000
       const s = 0.5 * a * t * t
       const p = Math.min(s / (TRACK_LEN / 40), 1)
       setSlidePos(p)
-      if (p < 1) rafRef.current = requestAnimationFrame(step)
+      if (p < 1) rafRef.current = requestAnimationFrame(stepFn)
     }
-    rafRef.current = requestAnimationFrame(step)
+    rafRef.current = requestAnimationFrame(stepFn)
   }
 
   const validate = () => {
@@ -44,14 +52,31 @@ function InclineCriticalAngle({ onComplete }) {
     setAttempts(nextAttempts)
     const ok = Math.abs(val - criticalAngle) <= 2
     if (ok) {
-      const stars = nextAttempts === 1 ? 3 : nextAttempts === 2 ? 2 : 1
       setFeedback({ ok: true })
-      setTimeout(() => onComplete(stars), 700)
+      setTimeout(() => setStep(2), 700)
     } else if (nextAttempts >= 3) {
       setFeedback({ ok: false, reveal: true })
-      setTimeout(() => onComplete(1, `Angle critique = ${round(criticalAngle)}°`), 1200)
+      setTimeout(() => setStep(2), 1300)
     } else {
       setFeedback({ ok: false })
+    }
+  }
+
+  const validateAccel = () => {
+    const val = parseFloat(accelInput)
+    const next = accelAttempts + 1
+    setAccelAttempts(next)
+    const ok = Math.abs(val - correctAccel) <= 0.3
+    const extra = Math.max(0, attempts - 1) + Math.max(0, next - 1)
+    if (ok) {
+      setAccelFeedback({ ok: true })
+      const stars = extra === 0 ? 3 : extra === 1 ? 2 : 1
+      setTimeout(() => onComplete(stars), 700)
+    } else if (next >= 3) {
+      setAccelFeedback({ ok: false, reveal: true })
+      setTimeout(() => onComplete(1, `a = ${round(correctAccel)} m/s²`), 1300)
+    } else {
+      setAccelFeedback({ ok: false })
     }
   }
 
@@ -75,25 +100,46 @@ function InclineCriticalAngle({ onComplete }) {
         <text x="150" y="20" fill="var(--muted)" fontSize="13">μs = {muS}</text>
       </svg>
       <div className="challenge-controls">
-        <p>Trouve l'angle critique où le bloc est sur le point de glisser (μs = {muS}).</p>
-        <label>
-          Angle d'essai: {angle}°
-          <input type="range" min="0" max="60" value={angle} onChange={(e) => { setAngle(+e.target.value); setTestResult(null); setSlidePos(0) }} />
-        </label>
-        <button className="btn-secondary" onClick={test}>Tester</button>
-        {testResult === 'static' && <p className="feedback-good">Le bloc reste immobile.</p>}
-        {testResult === 'sliding' && <p className="feedback-bad">Le bloc glisse !</p>}
-        <hr />
-        <label>
-          Ma réponse — angle critique (°)
-          <input type="number" step="0.1" value={answer} onChange={(e) => setAnswer(e.target.value)} />
-        </label>
-        <button className="btn-primary" onClick={validate}>Valider</button>
-        {feedback && !feedback.ok && (
-          <p className="feedback-bad">{feedback.reveal ? 'Essais épuisés — voici la réponse.' : 'Pas encore correct.'}</p>
+        {step === 1 ? (
+          <>
+            <span className="step-badge">Étape 1 / 2 — Angle critique</span>
+            <p>Trouve l'angle critique où le bloc est sur le point de glisser (μs = {muS}).</p>
+            <label>
+              Angle d'essai: {angle}°
+              <input type="range" min="0" max="60" value={angle} onChange={(e) => { setAngle(+e.target.value); setTestResult(null); setSlidePos(0) }} />
+            </label>
+            <button className="btn-secondary" onClick={test}>Tester</button>
+            {testResult === 'static' && <p className="feedback-good">Le bloc reste immobile.</p>}
+            {testResult === 'sliding' && <p className="feedback-bad">Le bloc glisse !</p>}
+            <hr />
+            <label>
+              Ma réponse — angle critique (°)
+              <input type="number" step="0.1" value={answer} onChange={(e) => setAnswer(e.target.value)} />
+            </label>
+            <button className="btn-primary" onClick={validate}>Valider</button>
+            {feedback && !feedback.ok && (
+              <p className="feedback-bad">{feedback.reveal ? 'Essais épuisés — passons à la suite.' : 'Pas encore correct.'}</p>
+            )}
+            {feedback?.ok && <p className="feedback-good">Exact !</p>}
+            <p className="hint">θc = arctan(μs)</p>
+          </>
+        ) : (
+          <>
+            <span className="step-badge">Étape 2 / 2 — Accélération</span>
+            <p className="step-complete">✓ Angle critique trouvé</p>
+            <p>Le plan est maintenant incliné à <b>{steepAngleFinal}°</b> (μk ≈ μs = {muS}). Calcule l'accélération du bloc le long du plan.</p>
+            <label>
+              Accélération (m/s²)
+              <input type="number" step="0.1" value={accelInput} onChange={(e) => setAccelInput(e.target.value)} />
+            </label>
+            <button className="btn-primary" onClick={validateAccel}>Valider</button>
+            {accelFeedback && !accelFeedback.ok && (
+              <p className="feedback-bad">{accelFeedback.reveal ? 'Essais épuisés — voici la réponse.' : 'Pas encore correct.'}</p>
+            )}
+            {accelFeedback?.ok && <p className="feedback-good">Exact !</p>}
+            <p className="hint">a = g(sin θ − μk cos θ)</p>
+          </>
         )}
-        {feedback?.ok && <p className="feedback-good">Exact !</p>}
-        <p className="hint">θc = arctan(μs)</p>
       </div>
     </div>
   )

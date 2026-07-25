@@ -10,15 +10,32 @@ const PX_PER_M = (BOTTOM_Y - TOP_Y) / 40
 const RIVER_WIDTH_M = 40
 const TOLERANCE_M = 4
 
+function driftAndTime(vR, vK, angleDeg) {
+  const theta = degToRad(angleDeg)
+  const gx = vR - vK * Math.sin(theta)
+  const gyMag = vK * Math.cos(theta)
+  const time = RIVER_WIDTH_M / gyMag
+  return { drift: gx * time, time }
+}
+
 function RiverCrossing({ onComplete }) {
   const canvasRef = useRef(null)
   const rafRef = useRef(null)
   const [vR] = useState(() => randInt(2, 4))
   const [vK] = useState(() => randInt(6, 9))
+  const [testAngle] = useState(() => randInt(15, 35))
   const [angle, setAngle] = useState(0)
   const [attempts, setAttempts] = useState(0)
   const [paddling, setPaddling] = useState(false)
   const [feedback, setFeedback] = useState(null)
+
+  const [step, setStep] = useState(1)
+  const [driftInput, setDriftInput] = useState('')
+  const [timeInput, setTimeInput] = useState('')
+  const [predAttempts, setPredAttempts] = useState(0)
+  const [predFeedback, setPredFeedback] = useState(null)
+
+  const testResult = driftAndTime(vR, vK, testAngle)
 
   const draw = (kayakX = START_X, kayakY = BOTTOM_Y) => {
     const ctx = canvasRef.current.getContext('2d')
@@ -62,15 +79,28 @@ function RiverCrossing({ onComplete }) {
 
   useEffect(() => () => cancelAnimationFrame(rafRef.current), [])
 
+  const checkPrediction = () => {
+    const userDrift = parseFloat(driftInput)
+    const userTime = parseFloat(timeInput)
+    const ok = Math.abs(userDrift - testResult.drift) <= 0.8 && Math.abs(userTime - testResult.time) <= 0.3
+    const next = predAttempts + 1
+    setPredAttempts(next)
+    if (ok) {
+      setPredFeedback({ ok: true })
+      setTimeout(() => setStep(2), 700)
+    } else if (next >= 3) {
+      setPredFeedback({ ok: false, reveal: true })
+      setTimeout(() => setStep(2), 1300)
+    } else {
+      setPredFeedback({ ok: false })
+    }
+  }
+
   const paddle = () => {
     if (paddling) return
     setPaddling(true)
     setFeedback(null)
-    const theta = degToRad(angle)
-    const gx = vR - vK * Math.sin(theta)
-    const gyMag = vK * Math.cos(theta)
-    const time = RIVER_WIDTH_M / gyMag
-    const driftM = gx * time
+    const { drift: driftM, time } = driftAndTime(vR, vK, angle)
     const endX = START_X + driftM * PX_PER_M
 
     const duration = 1800
@@ -87,14 +117,16 @@ function RiverCrossing({ onComplete }) {
       }
     }
     rafRef.current = requestAnimationFrame(step)
+    void time
   }
 
   const finish = (driftM) => {
     const nextAttempts = attempts + 1
     setAttempts(nextAttempts)
     const hit = Math.abs(driftM) <= TOLERANCE_M
+    const extra = Math.max(0, predAttempts - 1) + Math.max(0, nextAttempts - 1)
     if (hit) {
-      const stars = nextAttempts === 1 ? 3 : nextAttempts === 2 ? 2 : 1
+      const stars = extra === 0 ? 3 : extra === 1 ? 2 : 1
       setFeedback({ ok: true })
       setTimeout(() => onComplete(stars, `Dérive: ${driftM} m`), 700)
     } else if (nextAttempts >= 4) {
@@ -111,15 +143,40 @@ function RiverCrossing({ onComplete }) {
     <div className="challenge-columns">
       <canvas ref={canvasRef} width={W} height={H} className="challenge-canvas" />
       <div className="challenge-controls">
-        <p>Courant: {vR} m/s → &nbsp; Vitesse du kayak: {vK} m/s</p>
-        <p>Oriente le kayak pour accoster pile dans la zone verte, en face du départ.</p>
-        <label>
-          Angle vers l'amont: {angle}°
-          <input type="range" min="-50" max="50" value={angle} onChange={(e) => setAngle(+e.target.value)} disabled={paddling} />
-        </label>
-        <button className="btn-primary" onClick={paddle} disabled={paddling}>Pagayer</button>
-        {feedback?.retry && <p className="feedback-bad">Dérive de {feedback.driftM} m. Essais restants: {3 - attempts}</p>}
-        {feedback?.ok && <p className="feedback-good">Accosté avec précision !</p>}
+        <p>Courant: {vR} m/s → &nbsp; Vitesse du kayak: {vK} m/s &nbsp; | &nbsp; Largeur: {RIVER_WIDTH_M} m</p>
+        {step === 1 ? (
+          <>
+            <span className="step-badge">Étape 1 / 2 — Prédire</span>
+            <p>Si le kayak part avec un angle de <b>{testAngle}°</b> vers l'amont, calcule sa dérive et le temps de traversée.</p>
+            <label>
+              Dérive (m, + = aval, − = amont)
+              <input type="number" step="0.1" value={driftInput} onChange={(e) => setDriftInput(e.target.value)} />
+            </label>
+            <label>
+              Temps de traversée (s)
+              <input type="number" step="0.1" value={timeInput} onChange={(e) => setTimeInput(e.target.value)} />
+            </label>
+            <button className="btn-primary" onClick={checkPrediction}>Vérifier</button>
+            {predFeedback && !predFeedback.ok && (
+              <p className="feedback-bad">{predFeedback.reveal ? 'Essais épuisés — passons à la suite.' : 'Pas encore correct, réessaie.'}</p>
+            )}
+            {predFeedback?.ok && <p className="feedback-good">Exact !</p>}
+            <p className="hint">t = largeur / (v_kayak·cos θ) &nbsp;|&nbsp; dérive = (v_courant − v_kayak·sin θ) · t</p>
+          </>
+        ) : (
+          <>
+            <span className="step-badge">Étape 2 / 2 — Accoster</span>
+            <p className="step-complete">✓ Prédiction validée</p>
+            <p>Oriente le kayak pour accoster pile dans la zone verte, en face du départ.</p>
+            <label>
+              Angle vers l'amont: {angle}°
+              <input type="range" min="-50" max="50" value={angle} onChange={(e) => setAngle(+e.target.value)} disabled={paddling} />
+            </label>
+            <button className="btn-primary" onClick={paddle} disabled={paddling}>Pagayer</button>
+            {feedback?.retry && <p className="feedback-bad">Dérive de {feedback.driftM} m. Essais restants: {3 - attempts}</p>}
+            {feedback?.ok && <p className="feedback-good">Accosté avec précision !</p>}
+          </>
+        )}
       </div>
     </div>
   )

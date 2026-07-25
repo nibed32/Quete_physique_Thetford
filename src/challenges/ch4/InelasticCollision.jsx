@@ -13,7 +13,8 @@ function genScenario() {
   const m2 = randInt(2, 6)
   const v1 = randInt(4, 14)
   const vf = round((m1 * v1) / (m1 + m2), 1)
-  return { m1, m2, v1, vf }
+  const deltaKE = 0.5 * m1 * v1 * v1 - 0.5 * (m1 + m2) * vf * vf
+  return { m1, m2, v1, vf, deltaKE }
 }
 
 function InelasticCollision({ onComplete }) {
@@ -24,6 +25,12 @@ function InelasticCollision({ onComplete }) {
   const [running, setRunning] = useState(false)
   const [attempts, setAttempts] = useState(0)
   const [feedback, setFeedback] = useState(null)
+
+  const [step, setStep] = useState(1)
+  const [trialAttempts, setTrialAttempts] = useState(0)
+  const [keInput, setKeInput] = useState('')
+  const [keAttempts, setKeAttempts] = useState(0)
+  const [keFeedback, setKeFeedback] = useState(null)
 
   const draw = (x1 = START_X, x2 = COLLIDE_X, merged = false) => {
     const ctx = canvasRef.current.getContext('2d')
@@ -71,32 +78,32 @@ function InelasticCollision({ onComplete }) {
     setFeedback(null)
     const duration = 1000
     const start = performance.now()
-    const step = (now) => {
+    const stepFn = (now) => {
       const p = Math.min((now - start) / duration, 1)
       draw(START_X + (COLLIDE_X - START_X) * p, COLLIDE_X)
       if (p < 1) {
-        rafRef.current = requestAnimationFrame(step)
+        rafRef.current = requestAnimationFrame(stepFn)
       } else {
         phase2()
       }
     }
-    rafRef.current = requestAnimationFrame(step)
+    rafRef.current = requestAnimationFrame(stepFn)
   }
 
   const phase2 = () => {
     const duration = 900
     const start = performance.now()
-    const step = (now) => {
+    const stepFn = (now) => {
       const p = Math.min((now - start) / duration, 1)
       const x = COLLIDE_X + (END_X - COLLIDE_X) * p
       draw(x, x, true)
       if (p < 1) {
-        rafRef.current = requestAnimationFrame(step)
+        rafRef.current = requestAnimationFrame(stepFn)
       } else {
         finish()
       }
     }
-    rafRef.current = requestAnimationFrame(step)
+    rafRef.current = requestAnimationFrame(stepFn)
   }
 
   const finish = () => {
@@ -106,21 +113,70 @@ function InelasticCollision({ onComplete }) {
     const ok = Math.abs(val - s.vf) <= 0.3
     setRunning(false)
     if (ok) {
-      const stars = nextAttempts === 1 ? 3 : nextAttempts === 2 ? 2 : 1
       setFeedback({ ok: true })
-      setTimeout(() => onComplete(stars), 700)
+      setTimeout(() => {
+        setTrialAttempts(nextAttempts)
+        setStep(2)
+      }, 700)
     } else if (nextAttempts >= 3) {
       setFeedback({ ok: false, reveal: true })
-      setTimeout(() => onComplete(1, `vf = ${s.vf} m/s`), 1200)
+      setTimeout(() => {
+        setTrialAttempts(nextAttempts)
+        setStep(2)
+      }, 1200)
     } else {
       setFeedback({ ok: false })
     }
+  }
+
+  const keTolerance = Math.max(2, s.deltaKE * 0.08)
+
+  const verifyKE = () => {
+    const val = parseFloat(keInput)
+    const next = keAttempts + 1
+    setKeAttempts(next)
+    const ok = Math.abs(val - s.deltaKE) <= keTolerance
+    const extra = Math.max(0, trialAttempts - 1) + Math.max(0, next - 1)
+    if (ok) {
+      setKeFeedback({ ok: true })
+      const stars = extra === 0 ? 3 : extra === 1 ? 2 : 1
+      setTimeout(() => onComplete(stars), 700)
+    } else if (next >= 3) {
+      setKeFeedback({ ok: false, reveal: true })
+      setTimeout(() => onComplete(1, `Énergie perdue = ${round(s.deltaKE)} J`), 1300)
+    } else {
+      setKeFeedback({ ok: false })
+    }
+  }
+
+  if (step === 2) {
+    return (
+      <div className="challenge-columns">
+        <canvas ref={canvasRef} width={W} height={H} className="challenge-canvas" />
+        <div className="challenge-controls">
+          <span className="step-badge">Étape 2 / 2 — Énergie perdue</span>
+          <p className="step-complete">✓ vf = {s.vf} m/s</p>
+          <p>Calcule l'énergie cinétique perdue lors du choc (m1 = {s.m1} kg, v1 = {s.v1} m/s, m2 = {s.m2} kg).</p>
+          <label>
+            ΔKE perdue (J)
+            <input type="number" step="0.1" value={keInput} onChange={(e) => setKeInput(e.target.value)} />
+          </label>
+          <button className="btn-primary" onClick={verifyKE}>Vérifier</button>
+          {keFeedback && !keFeedback.ok && (
+            <p className="feedback-bad">{keFeedback.reveal ? 'Essais épuisés — voici la réponse.' : 'Pas encore correct.'}</p>
+          )}
+          {keFeedback?.ok && <p className="feedback-good">Exact !</p>}
+          <p className="hint">ΔKE = ½m1v1² − ½(m1+m2)vf²</p>
+        </div>
+      </div>
+    )
   }
 
   return (
     <div className="challenge-columns">
       <canvas ref={canvasRef} width={W} height={H} className="challenge-canvas" />
       <div className="challenge-controls">
+        <span className="step-badge">Étape 1 / 2 — Vitesse commune</span>
         <p>m1 = {s.m1} kg à v1 = {s.v1} m/s percute m2 = {s.m2} kg (au repos). Choc parfaitement mou — ils restent collés.</p>
         <label>
           Prédis la vitesse finale commune (m/s)
@@ -128,7 +184,7 @@ function InelasticCollision({ onComplete }) {
         </label>
         <button className="btn-primary" onClick={test} disabled={running}>Tester ma prédiction</button>
         {feedback && !feedback.ok && (
-          <p className="feedback-bad">{feedback.reveal ? 'Essais épuisés — voici la réponse.' : 'Pas encore correct, réessaie.'}</p>
+          <p className="feedback-bad">{feedback.reveal ? 'Essais épuisés — passons à la suite.' : 'Pas encore correct, réessaie.'}</p>
         )}
         {feedback?.ok && <p className="feedback-good">Exact !</p>}
         <p className="hint">vf = m1v1 / (m1 + m2)</p>

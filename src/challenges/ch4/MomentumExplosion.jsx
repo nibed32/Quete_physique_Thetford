@@ -11,7 +11,8 @@ function genScenario() {
   const m2 = randInt(2, 6)
   const v1 = randInt(4, 12)
   const v2 = round((-m1 * v1) / m2, 1)
-  return { m1, m2, v1, v2 }
+  const keTotal = 0.5 * m1 * v1 * v1 + 0.5 * m2 * v2 * v2
+  return { m1, m2, v1, v2, keTotal }
 }
 
 function MomentumExplosion({ onComplete }) {
@@ -22,6 +23,12 @@ function MomentumExplosion({ onComplete }) {
   const [running, setRunning] = useState(false)
   const [attempts, setAttempts] = useState(0)
   const [feedback, setFeedback] = useState(null)
+
+  const [step, setStep] = useState(1)
+  const [trialAttempts, setTrialAttempts] = useState(0)
+  const [keInput, setKeInput] = useState('')
+  const [keAttempts, setKeAttempts] = useState(0)
+  const [keFeedback, setKeFeedback] = useState(null)
 
   const draw = (x1 = CENTER_X, x2 = CENTER_X, exploded = false) => {
     const ctx = canvasRef.current.getContext('2d')
@@ -69,16 +76,16 @@ function MomentumExplosion({ onComplete }) {
     const start = performance.now()
     const x1End = CENTER_X + Math.max(s.v1, 1) * 15
     const x2End = CENTER_X - Math.max(Math.abs(val), 1) * 15 * (val < 0 ? 1 : -1)
-    const step = (now) => {
+    const stepFn = (now) => {
       const p = Math.min((now - start) / duration, 1)
       draw(CENTER_X + (x1End - CENTER_X) * p, CENTER_X + (x2End - CENTER_X) * p, true)
       if (p < 1) {
-        rafRef.current = requestAnimationFrame(step)
+        rafRef.current = requestAnimationFrame(stepFn)
       } else {
         finish(val)
       }
     }
-    rafRef.current = requestAnimationFrame(step)
+    rafRef.current = requestAnimationFrame(stepFn)
   }
 
   const finish = (val) => {
@@ -87,21 +94,70 @@ function MomentumExplosion({ onComplete }) {
     const ok = Math.abs(val - s.v2) <= 0.3
     setRunning(false)
     if (ok) {
-      const stars = nextAttempts === 1 ? 3 : nextAttempts === 2 ? 2 : 1
       setFeedback({ ok: true })
-      setTimeout(() => onComplete(stars), 700)
+      setTimeout(() => {
+        setTrialAttempts(nextAttempts)
+        setStep(2)
+      }, 700)
     } else if (nextAttempts >= 3) {
       setFeedback({ ok: false, reveal: true })
-      setTimeout(() => onComplete(1, `v2 = ${s.v2} m/s`), 1200)
+      setTimeout(() => {
+        setTrialAttempts(nextAttempts)
+        setStep(2)
+      }, 1200)
     } else {
       setFeedback({ ok: false })
     }
+  }
+
+  const keTolerance = Math.max(2, s.keTotal * 0.08)
+
+  const verifyKE = () => {
+    const val = parseFloat(keInput)
+    const next = keAttempts + 1
+    setKeAttempts(next)
+    const ok = Math.abs(val - s.keTotal) <= keTolerance
+    const extra = Math.max(0, trialAttempts - 1) + Math.max(0, next - 1)
+    if (ok) {
+      setKeFeedback({ ok: true })
+      const stars = extra === 0 ? 3 : extra === 1 ? 2 : 1
+      setTimeout(() => onComplete(stars), 700)
+    } else if (next >= 3) {
+      setKeFeedback({ ok: false, reveal: true })
+      setTimeout(() => onComplete(1, `Énergie libérée = ${round(s.keTotal)} J`), 1300)
+    } else {
+      setKeFeedback({ ok: false })
+    }
+  }
+
+  if (step === 2) {
+    return (
+      <div className="challenge-columns">
+        <canvas ref={canvasRef} width={W} height={H} className="challenge-canvas" />
+        <div className="challenge-controls">
+          <span className="step-badge">Étape 2 / 2 — Énergie libérée</span>
+          <p className="step-complete">✓ v2 = {s.v2} m/s</p>
+          <p>Calcule l'énergie cinétique totale libérée par l'explosion (m1 = {s.m1} kg, v1 = {s.v1} m/s, m2 = {s.m2} kg).</p>
+          <label>
+            KE totale (J)
+            <input type="number" step="0.1" value={keInput} onChange={(e) => setKeInput(e.target.value)} />
+          </label>
+          <button className="btn-primary" onClick={verifyKE}>Vérifier</button>
+          {keFeedback && !keFeedback.ok && (
+            <p className="feedback-bad">{keFeedback.reveal ? 'Essais épuisés — voici la réponse.' : 'Pas encore correct.'}</p>
+          )}
+          {keFeedback?.ok && <p className="feedback-good">Exact !</p>}
+          <p className="hint">KE = ½m1v1² + ½m2v2²</p>
+        </div>
+      </div>
+    )
   }
 
   return (
     <div className="challenge-columns">
       <canvas ref={canvasRef} width={W} height={H} className="challenge-canvas" />
       <div className="challenge-controls">
+        <span className="step-badge">Étape 1 / 2 — Vitesse v2</span>
         <p>Un objet immobile explose en deux fragments : m1 = {s.m1} kg part vers la <b>droite</b> à v1 = {s.v1} m/s.</p>
         <p>m2 = {s.m2} kg. Trouve v2 (positif = droite, négatif = gauche) pour conserver la quantité de mouvement.</p>
         <label>
@@ -110,7 +166,7 @@ function MomentumExplosion({ onComplete }) {
         </label>
         <button className="btn-primary" onClick={test} disabled={running}>Tester ma prédiction</button>
         {feedback && !feedback.ok && (
-          <p className="feedback-bad">{feedback.reveal ? 'Essais épuisés — voici la réponse.' : 'Pas encore correct, réessaie.'}</p>
+          <p className="feedback-bad">{feedback.reveal ? 'Essais épuisés — passons à la suite.' : 'Pas encore correct, réessaie.'}</p>
         )}
         {feedback?.ok && <p className="feedback-good">Exact !</p>}
         <p className="hint">m1v1 + m2v2 = 0</p>

@@ -20,6 +20,13 @@ function ProjectileTarget({ onComplete }) {
     return { min: dist - 3, max: dist + 3, center: dist }
   })
 
+  const [phase, setPhase] = useState('aim')
+  const [hitStats, setHitStats] = useState(null) // { angle, speed, trialAttempts }
+  const [tInput, setTInput] = useState('')
+  const [hInput, setHInput] = useState('')
+  const [analysisAttempts, setAnalysisAttempts] = useState(0)
+  const [analysisFeedback, setAnalysisFeedback] = useState(null)
+
   const draw = (ballX = null, ballY = null) => {
     const ctx = canvasRef.current.getContext('2d')
     ctx.clearRect(0, 0, W, H)
@@ -95,9 +102,11 @@ function ProjectileTarget({ onComplete }) {
     setAttempts(nextAttempts)
     const hit = landingX >= target.min && landingX <= target.max
     if (hit) {
-      const stars = nextAttempts === 1 ? 3 : nextAttempts === 2 ? 2 : 1
       setFeedback({ ok: true })
-      setTimeout(() => onComplete(stars, `Portée: ${landingX} m`), 700)
+      setTimeout(() => {
+        setHitStats({ angle, speed, trialAttempts: nextAttempts })
+        setPhase('analyze')
+      }, 700)
     } else if (nextAttempts >= 4) {
       setFeedback({ ok: false })
       setTimeout(() => onComplete(1, `Portée obtenue: ${landingX} m (cible: ${target.center} m)`), 900)
@@ -107,10 +116,61 @@ function ProjectileTarget({ onComplete }) {
     }
   }
 
+  const rad = hitStats ? degToRad(hitStats.angle) : 0
+  const correctT = hitStats ? (2 * hitStats.speed * Math.sin(rad)) / g : 0
+  const correctH = hitStats ? Math.pow(hitStats.speed * Math.sin(rad), 2) / (2 * g) : 0
+
+  const checkAnalysis = () => {
+    const userT = parseFloat(tInput)
+    const userH = parseFloat(hInput)
+    const ok = Math.abs(userT - correctT) <= 0.25 && Math.abs(userH - correctH) <= 0.6
+    const next = analysisAttempts + 1
+    setAnalysisAttempts(next)
+    const extra = Math.max(0, hitStats.trialAttempts - 1) + Math.max(0, next - 1)
+    if (ok) {
+      setAnalysisFeedback({ ok: true })
+      const stars = extra === 0 ? 3 : extra === 1 ? 2 : 1
+      setTimeout(() => onComplete(stars), 700)
+    } else if (next >= 3) {
+      setAnalysisFeedback({ ok: false, reveal: true })
+      setTimeout(() => onComplete(1, `t = ${round(correctT)} s, h_max = ${round(correctH)} m`), 1300)
+    } else {
+      setAnalysisFeedback({ ok: false })
+    }
+  }
+
+  if (phase === 'analyze') {
+    return (
+      <div className="challenge-columns">
+        <canvas ref={canvasRef} width={W} height={H} className="challenge-canvas" />
+        <div className="challenge-controls">
+          <span className="step-badge">Étape 2 / 2 — Analyser le tir</span>
+          <p className="step-complete">✓ Cible atteinte (angle {hitStats.angle}°, vitesse {hitStats.speed} m/s)</p>
+          <p>Calcule le temps de vol total et la hauteur maximale de ce tir.</p>
+          <label>
+            Temps de vol total (s)
+            <input type="number" step="0.01" value={tInput} onChange={(e) => setTInput(e.target.value)} />
+          </label>
+          <label>
+            Hauteur maximale (m)
+            <input type="number" step="0.1" value={hInput} onChange={(e) => setHInput(e.target.value)} />
+          </label>
+          <button className="btn-primary" onClick={checkAnalysis}>Vérifier</button>
+          {analysisFeedback && !analysisFeedback.ok && (
+            <p className="feedback-bad">{analysisFeedback.reveal ? 'Essais épuisés — voici la réponse.' : 'Pas encore correct, réessaie.'}</p>
+          )}
+          {analysisFeedback?.ok && <p className="feedback-good">Exact !</p>}
+          <p className="hint">t = 2v·sin(θ)/g &nbsp; | &nbsp; h_max = (v·sin(θ))² / (2g)</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="challenge-columns">
       <canvas ref={canvasRef} width={W} height={H} className="challenge-canvas" />
       <div className="challenge-controls">
+        <span className="step-badge">Étape 1 / 2 — Viser</span>
         <p>Ajuste l'angle et la vitesse pour atteindre la cible verte à {target.center} m.</p>
         <label>
           Angle: {angle}°

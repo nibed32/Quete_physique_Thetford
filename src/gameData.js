@@ -13,6 +13,7 @@ import NewtonRocket from './challenges/ch3/NewtonRocket'
 import ElasticCollision from './challenges/ch4/ElasticCollision'
 import InelasticCollision from './challenges/ch4/InelasticCollision'
 import MomentumExplosion from './challenges/ch4/MomentumExplosion'
+import FinalSynthesis from './challenges/ch4/FinalSynthesis'
 
 export const STATION_NAME = 'Station Aurora'
 export const AI_NAME = 'COSMO'
@@ -78,6 +79,7 @@ export const CHAPTERS = [
       { id: 'collision-elastique', title: 'Collision élastique', instructions: 'Ajuste la vitesse initiale pour obtenir la vitesse finale visée.', Component: ElasticCollision },
       { id: 'collision-inelastique', title: 'Collision inélastique', instructions: 'Prédis la vitesse commune après un choc parfaitement mou.', Component: InelasticCollision },
       { id: 'explosion', title: 'Conservation de la quantité de mouvement', instructions: 'Trouve la vitesse du second fragment après une explosion.', Component: MomentumExplosion },
+      { id: 'synthese-finale', title: 'Test final des systèmes', instructions: 'Combine vecteurs, cinématique et collisions pour ce test de synthèse en 3 étapes.', Component: FinalSynthesis },
     ],
   },
 ]

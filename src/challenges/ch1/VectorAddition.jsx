@@ -30,6 +30,11 @@ function VectorAddition({ onComplete }) {
   const dragging = useRef(false)
   const bTailRef = useRef(bTail)
 
+  const [rMagInput, setRMagInput] = useState('')
+  const [rAngleInput, setRAngleInput] = useState('')
+  const [calcAttempts, setCalcAttempts] = useState(0)
+  const [feedback, setFeedback] = useState(null)
+
   const bTip = {
     x: bTail.x + Math.cos(degToRad(B.angle)) * B.magnitude * SCALE,
     y: bTail.y - Math.sin(degToRad(B.angle)) * B.magnitude * SCALE,
@@ -73,13 +78,28 @@ function VectorAddition({ onComplete }) {
     }
   }
 
-  const validate = () => {
-    const stars = misses === 0 ? 3 : misses === 1 ? 2 : 1
-    const rx = A.magnitude * Math.cos(degToRad(A.angle)) + B.magnitude * Math.cos(degToRad(B.angle))
-    const ry = A.magnitude * Math.sin(degToRad(A.angle)) + B.magnitude * Math.sin(degToRad(B.angle))
-    const rMag = round(Math.sqrt(rx * rx + ry * ry))
-    const rAngle = round(radToDeg(Math.atan2(ry, rx)))
-    onComplete(stars, `Résultante R = ${rMag} m/s à ${rAngle}°`)
+  const rx = A.magnitude * Math.cos(degToRad(A.angle)) + B.magnitude * Math.cos(degToRad(B.angle))
+  const ry = A.magnitude * Math.sin(degToRad(A.angle)) + B.magnitude * Math.sin(degToRad(B.angle))
+  const correctRMag = Math.sqrt(rx * rx + ry * ry)
+  const correctRAngle = radToDeg(Math.atan2(ry, rx))
+
+  const checkResultant = () => {
+    const userMag = parseFloat(rMagInput)
+    const userAngle = parseFloat(rAngleInput)
+    const ok = Math.abs(userMag - correctRMag) <= 0.5 && Math.abs(userAngle - correctRAngle) <= 3
+    const next = calcAttempts + 1
+    setCalcAttempts(next)
+    const extra = misses + Math.max(0, next - 1)
+    if (ok) {
+      setFeedback({ ok: true })
+      const stars = extra === 0 ? 3 : extra === 1 ? 2 : 1
+      setTimeout(() => onComplete(stars, `Résultante R = ${round(correctRMag)} m/s à ${round(correctRAngle)}°`), 700)
+    } else if (next >= 3) {
+      setFeedback({ ok: false, reveal: true })
+      setTimeout(() => onComplete(1, `Résultante R = ${round(correctRMag)} m/s à ${round(correctRAngle)}°`), 1300)
+    } else {
+      setFeedback({ ok: false })
+    }
   }
 
   return (
@@ -95,7 +115,7 @@ function VectorAddition({ onComplete }) {
         </defs>
 
         <line x1={A_ORIGIN.x} y1={A_ORIGIN.y} x2={aTip.x} y2={aTip.y} stroke="var(--accent)" strokeWidth="3.5" markerEnd="url(#arrowA)" />
-        <text x={A_ORIGIN.x - 10} y={A_ORIGIN.y + 18} fill="var(--accent)" fontWeight="bold">A</text>
+        <text x={A_ORIGIN.x - 10} y={A_ORIGIN.y + 18} fill="var(--accent)" fontWeight="bold">A ({A.magnitude} m/s, {A.angle}°)</text>
 
         {snapped && (
           <line x1={A_ORIGIN.x} y1={A_ORIGIN.y} x2={bTip.x} y2={bTip.y} stroke="#7ee787" strokeWidth="3" strokeDasharray="6 4" />
@@ -105,21 +125,39 @@ function VectorAddition({ onComplete }) {
           <line x1={bTail.x} y1={bTail.y} x2={bTip.x} y2={bTip.y} stroke="#e0af2f" strokeWidth="3.5" markerEnd="url(#arrowB)" />
           <circle cx={bTail.x} cy={bTail.y} r="10" fill="#e0af2f" opacity="0.25" />
         </g>
-        <text x={bTail.x - 16} y={bTail.y - 10} fill="#e0af2f" fontWeight="bold">B</text>
+        <text x={bTail.x - 16} y={bTail.y - 10} fill="#e0af2f" fontWeight="bold">B ({B.magnitude} m/s, {B.angle}°)</text>
 
         {!snapped && <circle cx={aTip.x} cy={aTip.y} r={SNAP_RADIUS} fill="none" stroke="var(--accent)" strokeDasharray="3 3" opacity="0.6" />}
       </svg>
 
       <div className="challenge-controls">
-        <p>Fais glisser le vecteur <b style={{ color: '#e0af2f' }}>B</b> pour placer sa queue sur la pointe de <b style={{ color: 'var(--accent)' }}>A</b> (méthode bout-à-bout).</p>
-        {!snapped && <p className="hint">Tentatives ratées : {misses}</p>}
-        {snapped ? (
+        {!snapped ? (
           <>
-            <p className="feedback-good">Vecteurs connectés ! La résultante R (en vert) est tracée.</p>
-            <button className="btn-primary" onClick={validate}>Valider</button>
+            <span className="step-badge">Étape 1 / 2 — Assembler</span>
+            <p>Fais glisser le vecteur <b style={{ color: '#e0af2f' }}>B</b> pour placer sa queue sur la pointe de <b style={{ color: 'var(--accent)' }}>A</b> (méthode bout-à-bout).</p>
+            <p className="hint">Tentatives ratées : {misses}</p>
+            <p className="hint">Relâche près de la pointe de A pour l'accrocher.</p>
           </>
         ) : (
-          <p className="hint">Relâche près de la pointe de A pour l'accrocher.</p>
+          <>
+            <span className="step-badge">Étape 2 / 2 — Calculer</span>
+            <p className="step-complete">✓ Vecteurs assemblés</p>
+            <p>Calcule la magnitude et l'angle de la résultante R (en vert).</p>
+            <label>
+              Magnitude |R| (m/s)
+              <input type="number" step="0.1" value={rMagInput} onChange={(e) => setRMagInput(e.target.value)} />
+            </label>
+            <label>
+              Angle θ (°)
+              <input type="number" step="0.1" value={rAngleInput} onChange={(e) => setRAngleInput(e.target.value)} />
+            </label>
+            <button className="btn-primary" onClick={checkResultant}>Vérifier</button>
+            {feedback && !feedback.ok && (
+              <p className="feedback-bad">{feedback.reveal ? 'Essais épuisés — voici la réponse.' : 'Pas encore correct, réessaie.'}</p>
+            )}
+            {feedback?.ok && <p className="feedback-good">Exact !</p>}
+            <p className="hint">Rx = Ax + Bx, Ry = Ay + By, puis |R| et θ = atan2(Ry, Rx)</p>
+          </>
         )}
       </div>
     </div>

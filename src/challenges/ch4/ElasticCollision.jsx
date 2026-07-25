@@ -25,6 +25,12 @@ function ElasticCollision({ onComplete }) {
   const [attempts, setAttempts] = useState(0)
   const [feedback, setFeedback] = useState(null)
 
+  const [step, setStep] = useState(1)
+  const [hitStats, setHitStats] = useState(null) // { v1used, trialAttempts }
+  const [v1pInput, setV1pInput] = useState('')
+  const [v1pAttempts, setV1pAttempts] = useState(0)
+  const [v1pFeedback, setV1pFeedback] = useState(null)
+
   const draw = (x1 = START_X, x2 = COLLIDE_X) => {
     const ctx = canvasRef.current.getContext('2d')
     ctx.clearRect(0, 0, W, H)
@@ -101,9 +107,11 @@ function ElasticCollision({ onComplete }) {
     const ok = Math.abs(v2p - s.targetV2) <= 0.3
     setRunning(false)
     if (ok) {
-      const stars = nextAttempts === 1 ? 3 : nextAttempts === 2 ? 2 : 1
       setFeedback({ ok: true })
-      setTimeout(() => onComplete(stars, `v2' = ${round(v2p, 1)} m/s`), 700)
+      setTimeout(() => {
+        setHitStats({ v1used: v1, trialAttempts: nextAttempts })
+        setStep(2)
+      }, 700)
     } else if (nextAttempts >= 4) {
       setFeedback({ ok: false })
       setTimeout(() => onComplete(1, `v2' obtenue: ${round(v2p, 1)} m/s (visé: ${s.targetV2} m/s)`), 1000)
@@ -112,10 +120,54 @@ function ElasticCollision({ onComplete }) {
     }
   }
 
+  const correctV1p = hitStats ? ((s.m1 - s.m2) / (s.m1 + s.m2)) * hitStats.v1used : 0
+
+  const verifyV1p = () => {
+    const val = parseFloat(v1pInput)
+    const next = v1pAttempts + 1
+    setV1pAttempts(next)
+    const ok = Math.abs(val - correctV1p) <= 0.3
+    const extra = Math.max(0, hitStats.trialAttempts - 1) + Math.max(0, next - 1)
+    if (ok) {
+      setV1pFeedback({ ok: true })
+      const stars = extra === 0 ? 3 : extra === 1 ? 2 : 1
+      setTimeout(() => onComplete(stars), 700)
+    } else if (next >= 3) {
+      setV1pFeedback({ ok: false, reveal: true })
+      setTimeout(() => onComplete(1, `v1' = ${round(correctV1p, 1)} m/s`), 1300)
+    } else {
+      setV1pFeedback({ ok: false })
+    }
+  }
+
+  if (step === 2) {
+    return (
+      <div className="challenge-columns">
+        <canvas ref={canvasRef} width={W} height={H} className="challenge-canvas" />
+        <div className="challenge-controls">
+          <span className="step-badge">Étape 2 / 2 — Rebond de m1</span>
+          <p className="step-complete">✓ v2' obtenue avec v1 = {hitStats.v1used} m/s</p>
+          <p>Calcule maintenant la vitesse de m1 après le choc (v1').</p>
+          <label>
+            v1' (m/s, le signe indique la direction)
+            <input type="number" step="0.1" value={v1pInput} onChange={(e) => setV1pInput(e.target.value)} />
+          </label>
+          <button className="btn-primary" onClick={verifyV1p}>Vérifier</button>
+          {v1pFeedback && !v1pFeedback.ok && (
+            <p className="feedback-bad">{v1pFeedback.reveal ? 'Essais épuisés — voici la réponse.' : 'Pas encore correct.'}</p>
+          )}
+          {v1pFeedback?.ok && <p className="feedback-good">Exact !</p>}
+          <p className="hint">v1' = (m1 − m2)v1 / (m1 + m2)</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="challenge-columns">
       <canvas ref={canvasRef} width={W} height={H} className="challenge-canvas" />
       <div className="challenge-controls">
+        <span className="step-badge">Étape 1 / 2 — Viser v2'</span>
         <p>m1 = {s.m1} kg, m2 = {s.m2} kg (choc élastique, m2 au repos).</p>
         <p>Trouve la vitesse initiale v1 pour que le palet 2 reparte à <b>{s.targetV2} m/s</b>.</p>
         <label>
