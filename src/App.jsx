@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { CHAPTERS, MAX_STARS } from './gameData'
 import TitleScreen from './components/TitleScreen'
 import WorldMap from './components/WorldMap'
 import ChapterPath from './components/ChapterPath'
 import ChallengeShell from './components/ChallengeShell'
+import StarField from './components/StarField'
+import SoundToggle from './components/SoundToggle'
 
 const STORAGE_KEY = 'quete-physique-progress-v1'
 
@@ -68,40 +71,51 @@ function App() {
 
   return (
     <div className="app">
-      {screen === 'title' && (
-        <TitleScreen onStart={goMap} totalStars={totalStars} maxStars={MAX_STARS} />
-      )}
+      <StarField />
+      <SoundToggle />
+      <AnimatePresence mode="wait">
+        {screen === 'title' && (
+          <motion.div key="title" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }} style={{ display: 'flex', flex: 1 }}>
+            <TitleScreen onStart={goMap} totalStars={totalStars} maxStars={MAX_STARS} />
+          </motion.div>
+        )}
 
-      {screen === 'map' && (
-        <WorldMap
-          chapters={CHAPTERS}
-          progress={progress}
-          isUnlocked={isChapterUnlocked}
-          onSelectChapter={selectChapter}
-        />
-      )}
+        {screen === 'map' && (
+          <motion.div key="map" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }} style={{ display: 'flex', flex: 1 }}>
+            <WorldMap
+              chapters={CHAPTERS}
+              progress={progress}
+              isUnlocked={isChapterUnlocked}
+              onSelectChapter={selectChapter}
+            />
+          </motion.div>
+        )}
 
-      {screen === 'chapter' && chapter && (
-        <ChapterPath
-          chapter={chapter}
-          progress={progress}
-          onSelectChallenge={selectChallenge}
-          onBack={goMap}
-        />
-      )}
+        {screen === 'chapter' && chapter && (
+          <motion.div key={'chapter-' + chapter.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }} style={{ display: 'flex', flex: 1 }}>
+            <ChapterPath
+              chapter={chapter}
+              progress={progress}
+              onSelectChallenge={selectChallenge}
+              onBack={goMap}
+            />
+          </motion.div>
+        )}
 
-      {screen === 'challenge' && challenge && (
-        <ChallengeShell
-          key={attemptKey}
-          title={challenge.title}
-          instructions={challenge.instructions}
-          color={chapter.color}
-          onExit={() => setScreen('chapter')}
-          onFinish={finishChallenge}
-        >
-          {({ onComplete }) => <challenge.Component onComplete={onComplete} />}
-        </ChallengeShell>
-      )}
+        {screen === 'challenge' && challenge && (
+          <motion.div key={'challenge-' + attemptKey} initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.25 }} style={{ display: 'flex', flex: 1 }}>
+            <ChallengeShell
+              title={challenge.title}
+              instructions={challenge.instructions}
+              color={chapter.color}
+              onExit={() => setScreen('chapter')}
+              onFinish={finishChallenge}
+            >
+              {({ onComplete }) => <challenge.Component onComplete={onComplete} />}
+            </ChallengeShell>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
