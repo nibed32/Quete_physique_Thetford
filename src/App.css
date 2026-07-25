@@ -92,7 +92,8 @@ button {
   backdrop-filter: blur(16px);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 28px;
-  padding: 56px 48px;
+  padding: 48px 48px 40px;
+  max-width: 480px;
   box-shadow: 0 30px 80px rgba(0,0,0,0.55), 0 0 60px rgba(79,157,255,0.08);
 }
 .title-emoji { font-size: 3.2rem; display: block; margin-bottom: 6px; }
@@ -106,8 +107,43 @@ button {
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-.title-tagline { color: var(--muted); margin: 0 0 24px; font-size: 1.1rem; }
-.title-progress { color: #ffd166; font-weight: 600; margin-bottom: 24px; }
+.title-tagline { color: var(--muted); margin: 0 0 20px; font-size: 1.05rem; }
+.title-progress { color: #ffd166; font-weight: 600; margin: 20px 0 24px; }
+
+/* ---------- Transmission / story panels ---------- */
+.transmission-box {
+  background: rgba(79,157,255,0.08);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  border-left: 3px solid var(--accent);
+  border-radius: 10px;
+  padding: 14px 18px;
+  text-align: left;
+}
+.transmission-tag {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+.transmission-box p { margin: 0; color: var(--text); font-size: 0.9rem; line-height: 1.5; }
+.chapter-brief { margin-bottom: 24px; }
+.ending-card { max-width: 540px; }
+
+.chapter-mission-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--accent) 80%, white);
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  border-radius: 20px;
+  padding: 3px 10px;
+  margin-bottom: 2px;
+}
 
 .btn-primary {
   background: linear-gradient(135deg, var(--accent), #7c5cff);
@@ -145,7 +181,8 @@ button {
 
 /* ---------- World map ---------- */
 .world-map { flex: 1; padding: 40px 24px; max-width: 900px; margin: 0 auto; width: 100%; }
-.map-title { text-align: center; font-size: 1.7rem; margin-bottom: 32px; font-weight: 700; }
+.map-title { text-align: center; font-size: 1.7rem; margin-bottom: 20px; font-weight: 700; }
+.ending-banner { display: block; margin: 0 auto 28px; background: linear-gradient(135deg, #ffd166, #ff9f45); box-shadow: 0 10px 30px rgba(255,209,102,0.3); }
 .chapter-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));

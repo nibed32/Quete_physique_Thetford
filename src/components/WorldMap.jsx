@@ -15,16 +15,35 @@ const item = {
   show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } },
 }
 
-function WorldMap({ chapters, progress, isUnlocked, onSelectChapter }) {
+function WorldMap({ chapters, progress, isUnlocked, onSelectChapter, allComplete, onOpenEnding }) {
   const handleSelect = (i, unlocked) => {
     if (!unlocked) return
     playClick()
     onSelectChapter(i)
   }
 
+  const handleEnding = () => {
+    playClick()
+    onOpenEnding()
+  }
+
   return (
     <div className="world-map">
-      <h2 className="map-title">Choisis un chapitre</h2>
+      <h2 className="map-title">Choisis un système à réparer</h2>
+
+      {allComplete && (
+        <motion.button
+          className="btn-primary btn-large ending-banner"
+          onClick={handleEnding}
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          🎉 Station réparée — Voir l'épilogue
+        </motion.button>
+      )}
+
       <motion.div className="chapter-grid" variants={container} initial="hidden" animate="show">
         {chapters.map((chapter, i) => {
           const unlocked = isUnlocked(i)
@@ -42,6 +61,7 @@ function WorldMap({ chapters, progress, isUnlocked, onSelectChapter }) {
               whileHover={unlocked ? { y: -6, boxShadow: `0 16px 36px color-mix(in srgb, ${chapter.color} 35%, transparent)` } : {}}
               whileTap={unlocked ? { scale: 0.97 } : {}}
             >
+              {unlocked && <span className="chapter-mission-badge">{chapter.missionName}</span>}
               <span className="chapter-icon">{unlocked ? chapter.icon : '🔒'}</span>
               <span className="chapter-title">{chapter.title}</span>
               <span className="chapter-subtitle">{chapter.subtitle}</span>

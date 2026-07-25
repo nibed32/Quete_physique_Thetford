@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { playClick } from '../utils/sound'
+import { STORY_INTRO, STATION_NAME, AI_NAME } from '../gameData'
 
 function TitleScreen({ onStart, totalStars, maxStars }) {
   const handleStart = () => {
@@ -23,7 +24,18 @@ function TitleScreen({ onStart, totalStars, maxStars }) {
           ⚛️
         </motion.span>
         <h1>Quête Physique</h1>
-        <p className="title-tagline">Une aventure à travers la mécanique</p>
+        <p className="title-tagline">{STATION_NAME} — Une aventure à travers la mécanique</p>
+
+        <motion.div
+          className="transmission-box"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.4 }}
+        >
+          <span className="transmission-tag">📡 Transmission de {AI_NAME}</span>
+          <p>{STORY_INTRO}</p>
+        </motion.div>
+
         {totalStars > 0 && (
           <motion.p
             className="title-progress"

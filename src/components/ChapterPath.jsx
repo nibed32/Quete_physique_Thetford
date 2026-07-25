@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import StarRow from './StarRow'
 import { playClick } from '../utils/sound'
+import { AI_NAME } from '../gameData'
 
 const container = {
   hidden: {},
@@ -24,6 +25,17 @@ function ChapterPath({ chapter, progress, onSelectChallenge, onBack }) {
         <h2>{chapter.icon} {chapter.title}</h2>
         <div style={{ width: 90 }} />
       </div>
+
+      <motion.div
+        className="transmission-box chapter-brief"
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35 }}
+      >
+        <span className="transmission-tag">📡 {AI_NAME} — {chapter.missionName}</span>
+        <p>{chapter.brief}</p>
+      </motion.div>
+
       <motion.div className="challenge-list" variants={container} initial="hidden" animate="show">
         {chapter.challenges.map((challenge, i) => {
           const stars = progress[chapter.id]?.[challenge.id] || 0

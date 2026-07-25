@@ -7,6 +7,7 @@ import ChapterPath from './components/ChapterPath'
 import ChallengeShell from './components/ChallengeShell'
 import StarField from './components/StarField'
 import SoundToggle from './components/SoundToggle'
+import StoryEnding from './components/StoryEnding'
 
 const STORAGE_KEY = 'quete-physique-progress-v1'
 
@@ -41,7 +42,10 @@ function App() {
     return prev.challenges.every((c) => (progress[prev.id]?.[c.id] || 0) > 0)
   }
 
+  const allComplete = totalStars === MAX_STARS
+
   const goMap = () => setScreen('map')
+  const openEnding = () => setScreen('ending')
   const selectChapter = (i) => {
     setChapterIndex(i)
     setScreen('chapter')
@@ -87,7 +91,15 @@ function App() {
               progress={progress}
               isUnlocked={isChapterUnlocked}
               onSelectChapter={selectChapter}
+              allComplete={allComplete}
+              onOpenEnding={openEnding}
             />
+          </motion.div>
+        )}
+
+        {screen === 'ending' && (
+          <motion.div key="ending" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }} style={{ display: 'flex', flex: 1 }}>
+            <StoryEnding onBack={goMap} />
           </motion.div>
         )}
 

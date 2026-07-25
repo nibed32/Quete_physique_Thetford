@@ -14,11 +14,22 @@ import ElasticCollision from './challenges/ch4/ElasticCollision'
 import InelasticCollision from './challenges/ch4/InelasticCollision'
 import MomentumExplosion from './challenges/ch4/MomentumExplosion'
 
+export const STATION_NAME = 'Station Aurora'
+export const AI_NAME = 'COSMO'
+
+export const STORY_INTRO =
+  "La Station Aurora dérive après une collision avec un champ d'astéroïdes. Tous ses systèmes sont hors service. Toi seul·e maîtrises assez la mécanique pour tout réparer avant que l'équipage ne manque d'air."
+
+export const STORY_OUTRO =
+  "Tous les systèmes répondent de nouveau. La Station Aurora reprend sa route et l'équipage est sauf. Grâce à toi, la mission continue — tu es officiellement Ingénieur·e en Mécanique."
+
 export const CHAPTERS = [
   {
     id: 'ch1',
     title: 'Vecteurs',
     subtitle: 'Chapitre 1 — Introduction',
+    missionName: 'Poste de navigation',
+    brief: "Les capteurs directionnels sont désaxés depuis l'impact. Recalibre-les à l'aide des vecteurs pour qu'on retrouve notre position.",
     color: '#4f9dff',
     icon: '🧭',
     challenges: [
@@ -31,6 +42,8 @@ export const CHAPTERS = [
     id: 'ch2',
     title: 'Cinématique',
     subtitle: 'Chapitre 2',
+    missionName: 'Propulseurs',
+    brief: 'Le calculateur de trajectoire ne répond plus. Rétablis les équations du mouvement pour reprendre le contrôle de la poussée.',
     color: '#39c977',
     icon: '🚀',
     challenges: [
@@ -43,6 +56,8 @@ export const CHAPTERS = [
     id: 'ch3',
     title: 'Dynamique',
     subtitle: 'Chapitre 3',
+    missionName: 'Salle des machines',
+    brief: 'Les moteurs peinent à vaincre les frottements et refusent de redémarrer. Applique les lois de Newton pour relancer la salle des machines.',
     color: '#e07a2f',
     icon: '⚙️',
     challenges: [
@@ -55,6 +70,8 @@ export const CHAPTERS = [
     id: 'ch4',
     title: 'Systèmes de particules',
     subtitle: 'Chapitre 4',
+    missionName: 'Bouclier déflecteur',
+    brief: 'Le bouclier absorbe mal les impacts de débris depuis la collision. Maîtrise les chocs et la quantité de mouvement pour le stabiliser.',
     color: '#a259e0',
     icon: '💥',
     challenges: [
