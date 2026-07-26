@@ -41,10 +41,10 @@ function ChallengeShell({ title, instructions, color, onExit, onFinish, children
         <motion.div className="overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
           <Confetti active={result.stars >= 2} count={result.stars === 3 ? 90 : 55} />
           <motion.div
-            className="overlay-card"
-            initial={{ scale: 0.8, opacity: 0, y: 20 }}
+            className={`overlay-card${result.stars === 3 ? ' perfect' : ''}`}
+            initial={{ scale: 0.6, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
-            transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 18 }}
           >
             <h3>{result.stars > 0 ? 'Défi réussi !' : 'Pas tout à fait...'}</h3>
             <StarRow stars={result.stars} size={40} animated />

@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import StarRow from './StarRow'
+import KenneyBar from './KenneyBar'
 import { playClick } from '../utils/sound'
 
 function chapterStars(chapter, progress) {
@@ -68,14 +69,7 @@ function WorldMap({ chapters, progress, isUnlocked, onSelectChapter, allComplete
               {unlocked && (
                 <>
                   <StarRow stars={stars === maxStars ? 3 : stars > 0 ? Math.ceil((stars / maxStars) * 3) : 0} size={16} />
-                  <div className="chapter-progress-track">
-                    <motion.div
-                      className="chapter-progress-fill"
-                      initial={{ width: 0 }}
-                      animate={{ width: `${pct}%` }}
-                      transition={{ duration: 0.6, ease: 'easeOut', delay: 0.3 }}
-                    />
-                  </div>
+                  <KenneyBar pct={pct} />
                   <span className="chapter-score">{stars} / {maxStars} ⭐</span>
                 </>
               )}
