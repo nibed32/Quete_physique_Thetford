@@ -28,9 +28,10 @@ function VectorDecomposition({ onComplete }) {
   const [attempts2, setAttempts2] = useState(0)
   const [feedback2, setFeedback2] = useState(null)
 
-  const scale = 14
+  const scale = 10
   const originX = 150
   const originY = 240
+  const originY2 = 150
   const rad = degToRad(vec.angle)
   const tipX = originX + Math.cos(rad) * vec.magnitude * scale
   const tipY = originY - Math.sin(rad) * vec.magnitude * scale
@@ -39,7 +40,7 @@ function VectorDecomposition({ onComplete }) {
   const correctVy = vec.magnitude * Math.sin(rad)
 
   const wTipX = originX + w.wx * scale
-  const wTipY = originY - w.wy * scale
+  const wTipY = originY2 - w.wy * scale
   const correctWMag = Math.sqrt(w.wx * w.wx + w.wy * w.wy)
   const correctWAngle = normalizeAngle360(radToDeg(Math.atan2(w.wy, w.wx)))
 
@@ -101,15 +102,15 @@ function VectorDecomposition({ onComplete }) {
         </svg>
       ) : (
         <svg viewBox="0 0 300 300" className="challenge-svg">
-          <line x1="0" y1={originY} x2="300" y2={originY} stroke="var(--grid)" strokeWidth="1" />
+          <line x1="0" y1={originY2} x2="300" y2={originY2} stroke="var(--grid)" strokeWidth="1" />
           <line x1={originX} y1="0" x2={originX} y2="300" stroke="var(--grid)" strokeWidth="1" />
           <defs>
             <marker id="arrowhead2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
               <polygon points="0 0, 8 4, 0 8" fill="#e0af2f" />
             </marker>
           </defs>
-          <line x1={originX} y1={originY} x2={wTipX} y2={wTipY} stroke="#e0af2f" strokeWidth="3.5" markerEnd="url(#arrowhead2)" />
-          <text x={originX + 20} y={originY - 10} fill="var(--muted)" fontSize="13">Wx = {w.wx} m/s, Wy = {w.wy} m/s</text>
+          <line x1={originX} y1={originY2} x2={wTipX} y2={wTipY} stroke="#e0af2f" strokeWidth="3.5" markerEnd="url(#arrowhead2)" />
+          <text x={originX + 20} y={originY2 - 10} fill="var(--muted)" fontSize="13">Wx = {w.wx} m/s, Wy = {w.wy} m/s</text>
         </svg>
       )}
 

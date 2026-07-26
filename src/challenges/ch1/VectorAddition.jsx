@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react'
 import { degToRad, randInt, round, radToDeg } from '../../utils/physics'
 
-const SCALE = 16
-const A_ORIGIN = { x: 55, y: 235 }
+const SCALE = 9
+const A_ORIGIN = { x: 65, y: 250 }
 const SNAP_RADIUS = 20
 
 function genArrow(magRange, angleRange) {
