@@ -145,8 +145,8 @@ function ProjectileTarget({ onComplete }) {
         <canvas ref={canvasRef} width={W} height={H} className="challenge-canvas" />
         <div className="challenge-controls">
           <span className="step-badge">Étape 2 / 2 — Analyser le tir</span>
-          <p className="step-complete">✓ Cible atteinte (angle {hitStats.angle}°, vitesse {hitStats.speed} m/s)</p>
-          <p>Calcule le temps de vol total et la hauteur maximale de ce tir.</p>
+          <p className="step-complete">✓ Capsule arrimée (angle {hitStats.angle}°, vitesse {hitStats.speed} m/s)</p>
+          <p>COSMO veut confirmer la manœuvre : calcule le temps de vol total et la hauteur maximale atteinte par la capsule.</p>
           <label>
             Temps de vol total (s)
             <input type="number" step="0.01" value={tInput} onChange={(e) => setTInput(e.target.value)} />
@@ -170,7 +170,7 @@ function ProjectileTarget({ onComplete }) {
       <canvas ref={canvasRef} width={W} height={H} className="challenge-canvas" />
       <div className="challenge-controls">
         <span className="step-badge">Étape 1 / 2 — Viser</span>
-        <p>Ajuste l'angle et la vitesse pour atteindre la cible verte à {target.center} m.</p>
+        <p>Ajuste l'angle et la vitesse du tube de lancement pour que la capsule de ravitaillement atteigne la plateforme d'arrimage à {target.center} m.</p>
         <label>
           Angle: {angle}°
           <input type="range" min="10" max="80" value={angle} onChange={(e) => setAngle(+e.target.value)} disabled={firing} />

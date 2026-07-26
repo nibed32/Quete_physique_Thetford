@@ -137,7 +137,7 @@ function MomentumExplosion({ onComplete }) {
         <div className="challenge-controls">
           <span className="step-badge">Étape 2 / 2 — Énergie libérée</span>
           <p className="step-complete">✓ v2 = {s.v2} m/s</p>
-          <p>Calcule l'énergie cinétique totale libérée par l'explosion (m1 = {s.m1} kg, v1 = {s.v1} m/s, m2 = {s.m2} kg).</p>
+          <p>Calcule l'énergie cinétique totale libérée par la séparation (m1 = {s.m1} kg, v1 = {s.v1} m/s, m2 = {s.m2} kg).</p>
           <label>
             KE totale (J)
             <input type="number" step="0.1" value={keInput} onChange={(e) => setKeInput(e.target.value)} />
@@ -157,8 +157,8 @@ function MomentumExplosion({ onComplete }) {
       <canvas ref={canvasRef} width={W} height={H} className="challenge-canvas" />
       <div className="challenge-controls">
         <span className="step-badge">Étape 1 / 2 — Vitesse v2</span>
-        <p>Un objet immobile explose en deux fragments : m1 = {s.m1} kg part vers la <b>droite</b> à v1 = {s.v1} m/s.</p>
-        <p>m2 = {s.m2} kg. Trouve v2 (positif = droite, négatif = gauche) pour conserver la quantité de mouvement.</p>
+        <p>Une capsule de secours immobile se sépare en deux modules lors d'une manœuvre d'urgence : le module 1 (m1 = {s.m1} kg) part vers la <b>droite</b> à v1 = {s.v1} m/s.</p>
+        <p>Le module 2 (m2 = {s.m2} kg). Trouve v2 (positif = droite, négatif = gauche) pour conserver la quantité de mouvement.</p>
         <label>
           v2 (m/s)
           <input type="number" step="0.1" value={answer} onChange={(e) => setAnswer(e.target.value)} disabled={running} />

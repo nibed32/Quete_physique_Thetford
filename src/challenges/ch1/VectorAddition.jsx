@@ -134,15 +134,15 @@ function VectorAddition({ onComplete }) {
         {!snapped ? (
           <>
             <span className="step-badge">Étape 1 / 2 — Assembler</span>
-            <p>Fais glisser le vecteur <b style={{ color: '#e0af2f' }}>B</b> pour placer sa queue sur la pointe de <b style={{ color: 'var(--accent)' }}>A</b> (méthode bout-à-bout).</p>
+            <p>Les propulseurs de correction <b style={{ color: 'var(--accent)' }}>A</b> et <b style={{ color: '#e0af2f' }}>B</b> poussent la station dans des directions différentes. Fais glisser <b style={{ color: '#e0af2f' }}>B</b> pour l'ajouter à la pointe de <b style={{ color: 'var(--accent)' }}>A</b> (méthode bout-à-bout).</p>
             <p className="hint">Tentatives ratées : {misses}</p>
             <p className="hint">Relâche près de la pointe de A pour l'accrocher.</p>
           </>
         ) : (
           <>
             <span className="step-badge">Étape 2 / 2 — Calculer</span>
-            <p className="step-complete">✓ Vecteurs assemblés</p>
-            <p>Calcule la magnitude et l'angle de la résultante R (en vert).</p>
+            <p className="step-complete">✓ Poussées assemblées</p>
+            <p>Calcule la magnitude et l'angle de la poussée résultante R (en vert) qui va réellement déplacer la station.</p>
             <label>
               Magnitude |R| (m/s)
               <input type="number" step="0.1" value={rMagInput} onChange={(e) => setRMagInput(e.target.value)} />

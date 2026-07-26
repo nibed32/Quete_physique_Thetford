@@ -116,7 +116,7 @@ function ForceDiagram({ onComplete }) {
         {step === 1 ? (
           <>
             <span className="step-badge">Étape 1 / 2 — Diagramme</span>
-            <p>Le bloc est tiré {appliedRight ? 'vers la droite' : 'vers la gauche'} sur une surface avec friction. Place chaque force dans la bonne direction.</p>
+            <p>Une caisse est tirée {appliedRight ? 'vers la droite' : 'vers la gauche'} sur le convoyeur grippé de la salle des machines. Place chaque force dans la bonne direction pour comprendre pourquoi il peine.</p>
             <div className="chip-tray">
               {tray.map((f) => (
                 <button key={f.id} className={`force-chip ${selected === f.id ? 'selected' : ''}`} onClick={() => clickChip(f.id)}>
@@ -134,7 +134,7 @@ function ForceDiagram({ onComplete }) {
           <>
             <span className="step-badge">Étape 2 / 2 — Calculer</span>
             <p className="step-complete">✓ Diagramme validé</p>
-            <p>m = {dyn.m} kg, F = {dyn.F} N, μk = {dyn.muK}. Calcule l'accélération du bloc.</p>
+            <p>m = {dyn.m} kg, F = {dyn.F} N, μk = {dyn.muK}. Calcule l'accélération de la caisse sur le convoyeur.</p>
             <label>
               Accélération (m/s², + si dans le sens de F)
               <input type="number" step="0.1" value={accelInput} onChange={(e) => setAccelInput(e.target.value)} />

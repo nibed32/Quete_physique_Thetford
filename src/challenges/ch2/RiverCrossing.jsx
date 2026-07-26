@@ -69,7 +69,7 @@ function RiverCrossing({ onComplete }) {
     ctx.fill()
 
     ctx.font = '20px sans-serif'
-    ctx.fillText('🛶', kayakX - 10, kayakY + 6)
+    ctx.fillText('🤖', kayakX - 10, kayakY + 6)
   }
 
   useEffect(() => {
@@ -143,11 +143,11 @@ function RiverCrossing({ onComplete }) {
     <div className="challenge-columns">
       <canvas ref={canvasRef} width={W} height={H} className="challenge-canvas" />
       <div className="challenge-controls">
-        <p>Courant: {vR} m/s → &nbsp; Vitesse du kayak: {vK} m/s &nbsp; | &nbsp; Largeur: {RIVER_WIDTH_M} m</p>
+        <p>Flux de refroidissement: {vR} m/s → &nbsp; Vitesse du drone: {vK} m/s &nbsp; | &nbsp; Largeur du canal: {RIVER_WIDTH_M} m</p>
         {step === 1 ? (
           <>
             <span className="step-badge">Étape 1 / 2 — Prédire</span>
-            <p>Si le kayak part avec un angle de <b>{testAngle}°</b> vers l'amont, calcule sa dérive et le temps de traversée.</p>
+            <p>Si le drone de maintenance part avec un angle de <b>{testAngle}°</b> vers l'amont, calcule sa dérive et le temps de traversée du canal.</p>
             <label>
               Dérive (m, + = aval, − = amont)
               <input type="number" step="0.1" value={driftInput} onChange={(e) => setDriftInput(e.target.value)} />
@@ -164,16 +164,16 @@ function RiverCrossing({ onComplete }) {
           </>
         ) : (
           <>
-            <span className="step-badge">Étape 2 / 2 — Accoster</span>
+            <span className="step-badge">Étape 2 / 2 — Traverser</span>
             <p className="step-complete">✓ Prédiction validée</p>
-            <p>Oriente le kayak pour accoster pile dans la zone verte, en face du départ.</p>
+            <p>Oriente le drone pour qu'il arrive pile dans la zone verte, en face de son point de départ.</p>
             <label>
               Angle vers l'amont: {angle}°
               <input type="range" min="-50" max="50" value={angle} onChange={(e) => setAngle(+e.target.value)} disabled={paddling} />
             </label>
-            <button className="btn-primary" onClick={paddle} disabled={paddling}>Pagayer</button>
+            <button className="btn-primary" onClick={paddle} disabled={paddling}>Avancer</button>
             {feedback?.retry && <p className="feedback-bad">Dérive de {feedback.driftM} m. Essais restants: {3 - attempts}</p>}
-            {feedback?.ok && <p className="feedback-good">Accosté avec précision !</p>}
+            {feedback?.ok && <p className="feedback-good">Drone arrimé avec précision !</p>}
           </>
         )}
       </div>

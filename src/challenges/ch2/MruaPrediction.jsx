@@ -78,17 +78,17 @@ function MruaPrediction({ onComplete }) {
     <div className="challenge-columns">
       <div>
         <div className="mrua-track">
-          <div className="mrua-car" style={{ left: `${Math.min(animX, 95)}%` }}>🚗</div>
+          <div className="mrua-car" style={{ left: `${Math.min(animX, 95)}%` }}>🤖</div>
         </div>
         {step === 1 ? (
           <div className="scenario-box">
-            <p>Une voiture part avec une vitesse initiale <b>v₀ = {s.v0} m/s</b></p>
+            <p>Un chariot de fret automatisé part sur le rail de la soute avec une vitesse initiale <b>v₀ = {s.v0} m/s</b></p>
             <p>et subit une accélération constante <b>a₁ = {s.a1} m/s²</b></p>
             <p>pendant <b>t₁ = {s.t1} s</b>.</p>
           </div>
         ) : (
           <div className="scenario-box">
-            <p>À la fin de la phase 1, la voiture roule à <b>v₁ = {round(s.v1)} m/s</b>.</p>
+            <p>À la fin de la phase 1, le chariot roule à <b>v₁ = {round(s.v1)} m/s</b>.</p>
             <p>Elle subit alors une nouvelle accélération <b>a₂ = {s.a2} m/s²</b></p>
             <p>pendant <b>t₂ = {s.t2} s</b>.</p>
           </div>

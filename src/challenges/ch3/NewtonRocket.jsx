@@ -109,13 +109,13 @@ function NewtonRocket({ onComplete }) {
             <div className="finish-flag">🏁</div>
           </div>
           <div className="scenario-box">
-            <p>Objectif atteint en {round(hitStats.t)} s avec une accélération de {round(hitStats.a)} m/s².</p>
+            <p>Le chariot a rejoint le panneau de contrôle en {round(hitStats.t)} s avec une accélération de {round(hitStats.a)} m/s².</p>
           </div>
         </div>
         <div className="challenge-controls">
           <span className="step-badge">Étape 2 / 2 — Vitesse finale</span>
-          <p className="step-complete">✓ Distance parcourue avec succès</p>
-          <p>Calcule la vitesse atteinte à la fin du trajet.</p>
+          <p className="step-complete">✓ Panneau de contrôle atteint</p>
+          <p>Calcule la vitesse du chariot à son arrivée.</p>
           <label>
             Vitesse finale (m/s)
             <input type="number" step="0.1" value={vInput} onChange={(e) => setVInput(e.target.value)} />
@@ -138,6 +138,7 @@ function NewtonRocket({ onComplete }) {
           <div className="finish-flag">🏁</div>
         </div>
         <div className="scenario-box">
+          <p>Le chariot de maintenance doit rejoindre le panneau de contrôle avant la coupure d'urgence.</p>
           <p>Masse: <b>{s.m} kg</b> &nbsp; Friction: <b>{s.f} N</b> &nbsp; Distance: <b>{s.d} m</b></p>
           <p>Objectif: parcourir la distance en <b>{s.tTarget} s</b> (± 0.5 s)</p>
         </div>

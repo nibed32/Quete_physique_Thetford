@@ -146,8 +146,8 @@ function ElasticCollision({ onComplete }) {
         <canvas ref={canvasRef} width={W} height={H} className="challenge-canvas" />
         <div className="challenge-controls">
           <span className="step-badge">Étape 2 / 2 — Rebond de m1</span>
-          <p className="step-complete">✓ v2' obtenue avec v1 = {hitStats.v1used} m/s</p>
-          <p>Calcule maintenant la vitesse de m1 après le choc (v1').</p>
+          <p className="step-complete">✓ Module redirigé avec v1 = {hitStats.v1used} m/s</p>
+          <p>Calcule maintenant la vitesse du débris après le choc (v1').</p>
           <label>
             v1' (m/s, le signe indique la direction)
             <input type="number" step="0.1" value={v1pInput} onChange={(e) => setV1pInput(e.target.value)} />
@@ -167,8 +167,8 @@ function ElasticCollision({ onComplete }) {
       <canvas ref={canvasRef} width={W} height={H} className="challenge-canvas" />
       <div className="challenge-controls">
         <span className="step-badge">Étape 1 / 2 — Viser v2'</span>
-        <p>m1 = {s.m1} kg, m2 = {s.m2} kg (choc élastique, m2 au repos).</p>
-        <p>Trouve la vitesse initiale v1 pour que le palet 2 reparte à <b>{s.targetV2} m/s</b>.</p>
+        <p>Un fragment de débris (m1 = {s.m1} kg) doit heurter un module de collecte immobile (m2 = {s.m2} kg) sans dommage (choc élastique).</p>
+        <p>Trouve la vitesse initiale v1 du débris pour que le module reparte à <b>{s.targetV2} m/s</b> vers l'écoutille de recyclage.</p>
         <label>
           Vitesse initiale v1: {v1} m/s
           <input type="range" min="1" max="15" value={v1} onChange={(e) => setV1(+e.target.value)} disabled={running} />

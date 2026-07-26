@@ -34,9 +34,9 @@ export const CHAPTERS = [
     color: '#4f9dff',
     icon: '🧭',
     challenges: [
-      { id: 'decomposition', title: 'Décomposition', instructions: 'Décompose le vecteur en ses composantes Vx et Vy.', Component: VectorDecomposition },
-      { id: 'addition', title: 'Addition bout-à-bout', instructions: 'Additionne deux vecteurs par la méthode bout-à-bout.', Component: VectorAddition },
-      { id: 'produit-vectoriel', title: 'Produit vectoriel', instructions: 'Détermine le sens du produit vectoriel avec la règle de la main droite.', Component: CrossProductDirection },
+      { id: 'decomposition', title: 'Décomposition', instructions: "Un signal capté par le poste de navigation doit être décomposé en composantes pour trianguler sa source.", Component: VectorDecomposition },
+      { id: 'addition', title: 'Addition bout-à-bout', instructions: 'Combine deux poussées de correction (méthode bout-à-bout) pour réaligner la trajectoire de la station.', Component: VectorAddition },
+      { id: 'produit-vectoriel', title: 'Produit vectoriel', instructions: 'Détermine le sens du couple appliqué par les gyroscopes de stabilisation avec la règle de la main droite.', Component: CrossProductDirection },
     ],
   },
   {
@@ -48,9 +48,9 @@ export const CHAPTERS = [
     color: '#39c977',
     icon: '🚀',
     challenges: [
-      { id: 'projectile', title: 'Tir de précision', instructions: 'Ajuste l\'angle et la vitesse pour atteindre la cible.', Component: ProjectileTarget },
-      { id: 'mrua', title: 'MRUA', instructions: 'Prédis la position et la vitesse finales du mobile.', Component: MruaPrediction },
-      { id: 'riviere', title: 'Traversée de rivière', instructions: 'Compense le courant pour accoster directement en face.', Component: RiverCrossing },
+      { id: 'projectile', title: 'Tir de précision', instructions: 'Calibre le tube de lancement pour que la capsule de ravitaillement atteigne la plateforme d\'arrimage.', Component: ProjectileTarget },
+      { id: 'mrua', title: 'MRUA', instructions: 'Prédis la vitesse et la position du chariot de fret sur le rail de la soute.', Component: MruaPrediction },
+      { id: 'riviere', title: 'Traversée de rivière', instructions: 'Pilote le drone de maintenance à travers le flux de refroidissement pour l\'amener droit en face.', Component: RiverCrossing },
     ],
   },
   {
@@ -62,9 +62,9 @@ export const CHAPTERS = [
     color: '#e07a2f',
     icon: '⚙️',
     challenges: [
-      { id: 'plan-incline', title: 'Angle critique', instructions: 'Trouve l\'angle où le bloc est sur le point de glisser.', Component: InclineCriticalAngle },
-      { id: 'diagramme-forces', title: 'Diagramme de forces', instructions: 'Place chaque force dans la bonne direction.', Component: ForceDiagram },
-      { id: 'newton2', title: '2e loi de Newton', instructions: 'Choisis la force pour atteindre l\'objectif dans le bon temps.', Component: NewtonRocket },
+      { id: 'plan-incline', title: 'Angle critique', instructions: 'Trouve l\'angle où la caisse de pièces se met à glisser sur la rampe de la soute.', Component: InclineCriticalAngle },
+      { id: 'diagramme-forces', title: 'Diagramme de forces', instructions: 'Place chaque force agissant sur la caisse tirée sur le convoyeur de la salle des machines.', Component: ForceDiagram },
+      { id: 'newton2', title: '2e loi de Newton', instructions: 'Calibre la poussée du chariot de maintenance pour respecter le délai de la manœuvre.', Component: NewtonRocket },
     ],
   },
   {
@@ -76,10 +76,10 @@ export const CHAPTERS = [
     color: '#a259e0',
     icon: '💥',
     challenges: [
-      { id: 'collision-elastique', title: 'Collision élastique', instructions: 'Ajuste la vitesse initiale pour obtenir la vitesse finale visée.', Component: ElasticCollision },
-      { id: 'collision-inelastique', title: 'Collision inélastique', instructions: 'Prédis la vitesse commune après un choc parfaitement mou.', Component: InelasticCollision },
-      { id: 'explosion', title: 'Conservation de la quantité de mouvement', instructions: 'Trouve la vitesse du second fragment après une explosion.', Component: MomentumExplosion },
-      { id: 'synthese-finale', title: 'Test final des systèmes', instructions: 'Combine vecteurs, cinématique et collisions pour ce test de synthèse en 3 étapes.', Component: FinalSynthesis },
+      { id: 'collision-elastique', title: 'Collision élastique', instructions: 'Ajuste la vitesse d\'un débris pour qu\'il rebondisse sur le bouclier à la vitesse voulue.', Component: ElasticCollision },
+      { id: 'collision-inelastique', title: 'Collision inélastique', instructions: 'Prédis la vitesse commune quand un débris reste collé au bouclier après l\'impact.', Component: InelasticCollision },
+      { id: 'explosion', title: 'Conservation de la quantité de mouvement', instructions: 'Trouve la vitesse du second module après la séparation d\'urgence d\'une capsule de secours.', Component: MomentumExplosion },
+      { id: 'synthese-finale', title: 'Test final des systèmes', instructions: 'COSMO lance un test de synthèse en 3 étapes combinant vecteurs, cinématique et collisions.', Component: FinalSynthesis },
     ],
   },
 ]

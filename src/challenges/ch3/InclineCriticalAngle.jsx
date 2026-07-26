@@ -103,14 +103,14 @@ function InclineCriticalAngle({ onComplete }) {
         {step === 1 ? (
           <>
             <span className="step-badge">Étape 1 / 2 — Angle critique</span>
-            <p>Trouve l'angle critique où le bloc est sur le point de glisser (μs = {muS}).</p>
+            <p>Une caisse de pièces détachées est calée sur la rampe d'accès de la soute. Trouve l'angle critique où elle se met à glisser (μs = {muS}).</p>
             <label>
               Angle d'essai: {angle}°
               <input type="range" min="0" max="60" value={angle} onChange={(e) => { setAngle(+e.target.value); setTestResult(null); setSlidePos(0) }} />
             </label>
             <button className="btn-secondary" onClick={test}>Tester</button>
-            {testResult === 'static' && <p className="feedback-good">Le bloc reste immobile.</p>}
-            {testResult === 'sliding' && <p className="feedback-bad">Le bloc glisse !</p>}
+            {testResult === 'static' && <p className="feedback-good">La caisse reste immobile.</p>}
+            {testResult === 'sliding' && <p className="feedback-bad">La caisse glisse !</p>}
             <hr />
             <label>
               Ma réponse — angle critique (°)
@@ -126,7 +126,7 @@ function InclineCriticalAngle({ onComplete }) {
           <>
             <span className="step-badge">Étape 2 / 2 — Accélération</span>
             <p className="step-complete">✓ Angle critique trouvé</p>
-            <p>Le plan est maintenant incliné à <b>{steepAngleFinal}°</b> (μk ≈ μs = {muS}). Calcule l'accélération du bloc le long du plan.</p>
+            <p>La rampe est maintenant relevée à <b>{steepAngleFinal}°</b> (μk ≈ μs = {muS}). Calcule l'accélération de la caisse qui glisse.</p>
             <label>
               Accélération (m/s²)
               <input type="number" step="0.1" value={accelInput} onChange={(e) => setAccelInput(e.target.value)} />

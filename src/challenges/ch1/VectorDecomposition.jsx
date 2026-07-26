@@ -134,8 +134,8 @@ function VectorDecomposition({ onComplete }) {
         ) : (
           <>
             <span className="step-badge">Étape 2 / 2 — Recomposer</span>
-            <p className="step-complete">✓ Décomposition réussie</p>
-            <p>Cette fois, retrouve la magnitude et l'angle du vecteur W à partir de ses composantes.</p>
+            <p className="step-complete">✓ Premier signal trianguré</p>
+            <p>Un second écho arrive avec les composantes Wx et Wy. Retrouve sa magnitude et son angle pour confirmer la position de la station.</p>
             <label>
               Magnitude |W| (m/s)
               <input type="number" step="0.1" value={wMag} onChange={(e) => setWMag(e.target.value)} />

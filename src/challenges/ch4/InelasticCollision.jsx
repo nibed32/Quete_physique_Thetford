@@ -156,7 +156,7 @@ function InelasticCollision({ onComplete }) {
         <div className="challenge-controls">
           <span className="step-badge">Étape 2 / 2 — Énergie perdue</span>
           <p className="step-complete">✓ vf = {s.vf} m/s</p>
-          <p>Calcule l'énergie cinétique perdue lors du choc (m1 = {s.m1} kg, v1 = {s.v1} m/s, m2 = {s.m2} kg).</p>
+          <p>COSMO veut savoir combien d'énergie le bouclier a dû absorber (m1 = {s.m1} kg, v1 = {s.v1} m/s, m2 = {s.m2} kg).</p>
           <label>
             ΔKE perdue (J)
             <input type="number" step="0.1" value={keInput} onChange={(e) => setKeInput(e.target.value)} />
@@ -176,7 +176,7 @@ function InelasticCollision({ onComplete }) {
       <canvas ref={canvasRef} width={W} height={H} className="challenge-canvas" />
       <div className="challenge-controls">
         <span className="step-badge">Étape 1 / 2 — Vitesse commune</span>
-        <p>m1 = {s.m1} kg à v1 = {s.v1} m/s percute m2 = {s.m2} kg (au repos). Choc parfaitement mou — ils restent collés.</p>
+        <p>Un débris (m1 = {s.m1} kg) fonce à v1 = {s.v1} m/s sur le bouclier déflecteur (m2 = {s.m2} kg, immobile) et s'y encastre (choc parfaitement mou).</p>
         <label>
           Prédis la vitesse finale commune (m/s)
           <input type="number" step="0.1" value={answer} onChange={(e) => setAnswer(e.target.value)} disabled={running} />

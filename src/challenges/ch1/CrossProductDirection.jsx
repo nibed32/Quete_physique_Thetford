@@ -96,7 +96,7 @@ function CrossProductDirection({ onComplete }) {
         ) : (
           <span className="step-badge">Manche {round + 1} / {TOTAL_ROUNDS} — Direction</span>
         )}
-        <p>Utilise la règle de la main droite : dans quel sens pointe <b>A × B</b> ?</p>
+        <p>Deux gyroscopes appliquent les vecteurs de rotation A et B. Utilise la règle de la main droite pour prédire dans quel sens le couple <b>A × B</b> va faire pivoter la station.</p>
         {needsMagnitude && (
           <label>
             Magnitude |A × B|
