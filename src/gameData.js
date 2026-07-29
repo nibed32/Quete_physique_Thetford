@@ -34,8 +34,8 @@ export const CHAPTERS = [
     color: '#4f9dff',
     icon: '🧭',
     challenges: [
-      { id: 'decomposition', title: 'Décomposition', instructions: "Un signal capté par le poste de navigation doit être décomposé en composantes pour trianguler sa source.", Component: VectorDecomposition },
-      { id: 'addition', title: 'Addition bout-à-bout', instructions: 'Combine deux poussées de correction (méthode bout-à-bout) pour réaligner la trajectoire de la station.', Component: VectorAddition },
+      { id: 'decomposition', title: 'Décomposition', instructions: "Un vecteur de position capté par le poste de navigation doit être décomposé en composantes pour trianguler sa source.", Component: VectorDecomposition },
+      { id: 'addition', title: 'Addition bout-à-bout', instructions: "Enchaîne quatre poussées de correction (méthode bout-à-bout) pour relier le point de départ de la station à son point d'arrimage.", Component: VectorAddition },
       { id: 'produit-vectoriel', title: 'Produit vectoriel', instructions: 'Détermine le sens du couple appliqué par les gyroscopes de stabilisation avec la règle de la main droite.', Component: CrossProductDirection },
     ],
   },

@@ -97,7 +97,7 @@ function VectorDecomposition({ onComplete }) {
             </marker>
           </defs>
           <line x1={originX} y1={originY} x2={tipX} y2={tipY} stroke="var(--accent)" strokeWidth="3.5" markerEnd="url(#arrowhead1)" />
-          <text x={tipX + 8} y={tipY} fill="var(--accent)" fontWeight="bold">V = {vec.magnitude} m/s</text>
+          <text x={tipX + 8} y={tipY} fill="var(--accent)" fontWeight="bold">d = {vec.magnitude} m</text>
           <text x={originX + 20} y={originY - 10} fill="var(--muted)" fontSize="13">θ = {vec.angle}°</text>
         </svg>
       ) : (
@@ -110,7 +110,7 @@ function VectorDecomposition({ onComplete }) {
             </marker>
           </defs>
           <line x1={originX} y1={originY2} x2={wTipX} y2={wTipY} stroke="#e0af2f" strokeWidth="3.5" markerEnd="url(#arrowhead2)" />
-          <text x={originX + 20} y={originY2 - 10} fill="var(--muted)" fontSize="13">Wx = {w.wx} m/s, Wy = {w.wy} m/s</text>
+          <text x={originX + 20} y={originY2 - 10} fill="var(--muted)" fontSize="13">Wx = {w.wx} m, Wy = {w.wy} m</text>
         </svg>
       )}
 
@@ -119,11 +119,11 @@ function VectorDecomposition({ onComplete }) {
           <>
             <span className="step-badge">Étape 1 / 2 — Décomposer</span>
             <label>
-              Composante V<sub>x</sub> (m/s)
+              Composante d<sub>x</sub> (m)
               <input type="number" step="0.1" value={vx} onChange={(e) => setVx(e.target.value)} />
             </label>
             <label>
-              Composante V<sub>y</sub> (m/s)
+              Composante d<sub>y</sub> (m)
               <input type="number" step="0.1" value={vy} onChange={(e) => setVy(e.target.value)} />
             </label>
             <button className="btn-primary" onClick={checkStep1}>Vérifier</button>
@@ -138,7 +138,7 @@ function VectorDecomposition({ onComplete }) {
             <p className="step-complete">✓ Premier signal trianguré</p>
             <p>Un second écho arrive avec les composantes Wx et Wy. Retrouve sa magnitude et son angle pour confirmer la position de la station.</p>
             <label>
-              Magnitude |W| (m/s)
+              Magnitude |W| (m)
               <input type="number" step="0.1" value={wMag} onChange={(e) => setWMag(e.target.value)} />
             </label>
             <label>
